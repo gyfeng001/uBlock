@@ -74,11 +74,12 @@
         // Chromium 63+ supports the `initiator` property, which contains
         // the URL of the origin from which the network request was made.
         if (
-            details.tabId === vAPI.noTabId &&
             typeof details.initiator === 'string' &&
             details.initiator !== 'null'
         ) {
-            details.tabId = vAPI.anyTabId;
+            if ( details.tabId === vAPI.noTabId ) {
+                details.tabId = vAPI.anyTabId;
+            }
             details.documentUrl = details.initiator;
         }
 
