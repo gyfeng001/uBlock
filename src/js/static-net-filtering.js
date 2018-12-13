@@ -126,13 +126,6 @@ let pageHostnameRegister = '',
 
 // Local helpers
 
-// Be sure to not confuse 'example.com' with 'anotherexample.com'
-const isFirstParty = function(domain, hostname) {
-    return hostname.endsWith(domain) &&
-          (hostname.length === domain.length ||
-           hostname.charCodeAt(hostname.length - domain.length - 1) === 0x2E /* '.' */);
-};
-
 const normalizeRegexSource = function(s) {
     try {
         const re = new RegExp(s);
@@ -2520,28 +2513,22 @@ FilterContainer.prototype.matchStringGenericHide = function(requestURL) {
 //   Some type of requests are exceptional, they need custom handling,
 //   not the generic handling.
 
-FilterContainer.prototype.matchStringExactType = function(
-    fctxt,
-    requestURL,
-    requestType
-) {
+FilterContainer.prototype.matchStringExactType = function(fctxt, requestType) {
     // Special cases.
     if ( requestType === 'generichide' ) {
-        return this.matchStringGenericHide(requestURL);
+        return this.matchStringGenericHide(fctxt.url);
     }
     let type = typeNameToTypeValue[requestType];
     if ( type === undefined ) { return 0; }
 
     // Prime tokenizer: we get a normalized URL in return.
-    let url = this.urlTokenizer.setURL(requestURL);
+    let url = this.urlTokenizer.setURL(fctxt.url);
 
     // These registers will be used by various filters
     pageHostnameRegister = fctxt.getDocHostname();
-    requestHostnameRegister = µb.URI.hostnameFromURI(url);
+    requestHostnameRegister = fctxt.getHostname();
 
-    let party = isFirstParty(fctxt.getDocDomain(), requestHostnameRegister)
-        ? FirstParty
-        : ThirdParty;
+    let party = fctxt.is3rdPartyToDoc() ? ThirdParty : FirstParty;
     let categories = this.categories,
         catBits, bucket;
 
@@ -2614,7 +2601,7 @@ FilterContainer.prototype.matchString = function(fctxt) {
     if ( type === undefined ) {
          type = otherTypeBitValue;
     } else if ( type === 0 || type > otherTypeBitValue ) {
-        return this.matchStringExactType(fctxt, fctxt.url, fctxt.type);
+        return this.matchStringExactType(fctxt, fctxt.type);
     }
 
     // The logic here is simple:

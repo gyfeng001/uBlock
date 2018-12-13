@@ -189,8 +189,16 @@
         this.docDomain = a;
         return this;
     },
+    // The idea is to minimize the amout of work done to figure out whether
+    // the resource is 3rd-party to the document.
     is3rdPartyToDoc: function() {
-        return this.getDomain() !== this.getDocDomain();
+        const docDomain = this.getDocDomain();
+        if ( this.domain !== undefined ) { return this.domain !== docDomain; }
+        const hostname = this.getHostname();
+        if ( hostname.endsWith(docDomain) === false ) { return true; }
+        const i = hostname.length - docDomain.length;
+        if ( i === 0 ) { return false; }
+        return hostname.charCodeAt(i - 1) !== 0x2E /* '.' */;
     },
     setTabId: function(a) {
         this.tabId = a;
@@ -238,9 +246,16 @@
         this.docDomain = a;
         return this;
     },
-
+    // The idea is to minimize the amout of work done to figure out whether
+    // the resource is 3rd-party to the top document.
     is3rdPartyToTab: function() {
-        return this.getDomain() !== this.getTabDomain();
+        const tabDomain = this.getTabDomain();
+        if ( this.domain !== undefined ) { return this.domain !== tabDomain; }
+        const hostname = this.getHostname();
+        if ( hostname.endsWith(tabDomain) === false ) { return true; }
+        const i = hostname.length - tabDomain.length;
+        if ( i === 0 ) { return false; }
+        return hostname.charCodeAt(i - 1) !== 0x2E /* '.' */;
     },
     setFilter: function(a) {
         this.filter = a;

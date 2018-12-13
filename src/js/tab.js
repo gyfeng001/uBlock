@@ -662,7 +662,6 @@ vAPI.tabs.onPopupUpdated = (function() {
         if ( µb.getNetFilteringSwitch(targetURL) ) {
             result = µb.staticNetFilteringEngine.matchStringExactType(
                 fctxt,
-                targetURL,
                 popupType
             );
             if ( result !== 0 ) {

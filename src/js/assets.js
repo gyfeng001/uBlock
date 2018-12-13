@@ -27,13 +27,12 @@
 
 /******************************************************************************/
 
-var reIsExternalPath = /^(?:[a-z-]+):\/\//,
+const reIsExternalPath = /^(?:[a-z-]+):\/\//,
     reIsUserAsset = /^user-/,
     errorCantConnectTo = vAPI.i18n('errorCantConnectTo'),
     noopfunc = function(){};
 
-var api = {
-};
+const api = {};
 
 /******************************************************************************/
 
@@ -105,7 +104,7 @@ api.fetchText = function(url, onLoad, onError) {
         cleanup();
         // xhr for local files gives status 0, but actually succeeds
         const details = {
-            url: url,
+            url,
             content: '',
             statusCode: this.status || 200,
             statusText: this.statusText || ''
@@ -133,7 +132,7 @@ api.fetchText = function(url, onLoad, onError) {
         µBlock.logger.writeOne({
             error: errorCantConnectTo.replace('{{msg}}', actualUrl)
         });
-        onError({ url: url, content: '' });
+        onError({ url, content: '' });
     };
 
     const onTimeout = function() {

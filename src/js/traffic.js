@@ -169,7 +169,7 @@ const onBeforeRootFrameRequest = function(fctxt) {
 
     // Check for specific block
     if ( result === 0 ) {
-        result = snfe.matchStringExactType(fctxt, requestURL, 'main_frame');
+        result = snfe.matchStringExactType(fctxt, 'main_frame');
         if ( result !== 0 || logEnabled ) {
             logData = snfe.toLogData();
         }
@@ -177,7 +177,7 @@ const onBeforeRootFrameRequest = function(fctxt) {
 
     // Check for generic block
     if ( result === 0 ) {
-        result = snfe.matchStringExactType(fctxt, requestURL, 'no_type');
+        result = snfe.matchStringExactType(fctxt, 'no_type');
         if ( result !== 0 || logEnabled ) {
             logData = snfe.toLogData();
         }

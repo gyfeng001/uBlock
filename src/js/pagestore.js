@@ -300,14 +300,17 @@ PageStore.prototype.init = function(tabId, context) {
     this.netFilteringCache = NetFilteringResultCache.factory();
     this.internalRedirectionCount = 0;
 
-    // The current filtering context is clone because:
+    // The current filtering context is cloned because:
     // - We may be called with or without the current context having been
     //   initialized.
     // - If it has been initialized, we do not want to change the state
     //   of the current context.
-    const fctxt = µBlock.filteringContext.duplicate();
-    fctxt.fromTabId(tabId)
-         .setURL(tabContext.rawURL);
+    const fctxt = µb.logger.enabled
+        ? µBlock.filteringContext
+                .duplicate()
+                .fromTabId(tabId)
+                .setURL(tabContext.rawURL)
+        : undefined;
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/314
     const masterSwitch = tabContext.getNetFilteringSwitch();

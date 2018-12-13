@@ -1654,9 +1654,7 @@ var popupManager = (function() {
 
     const toggleOff = function() {
         document.removeEventListener('tabIdChanged', onTabIdChanged);
-
         uDom.nodeFromId('inspectors').classList.remove('popupOn');
-
         popup.removeEventListener('load', onLoad);
         popupObserver.disconnect();
         popupObserver = null;
